@@ -6,21 +6,15 @@ import { PhysicsBody } from "./physics/PhysicsBody";
 
 const _canvas = new Canvas("game-canvas", { fullScreen: true, background: "#111" });
 
-interface BallOptions {
-  position?: Vector2;
-  mass?: number;
-  color?: string;
-  velocity?: Vector2;
-}
-
 class Ball extends PhysicsBody {
-  radius = 10;
+  radius: number;
   color: string;
 
-  constructor({ position = _canvas.middle, color = "#ccc", velocity }: BallOptions = {}) {
-    super({ position, velocity, gravity: 100, friction: 10 });
+  constructor() {
+    super({ position: Vector2.random([0, 0], [_canvas.screenWidth, _canvas.screenHeight]), gravity: 100, friction: 10 });
+    this.color = "#fff";
+    this.radius = 10;
     this.collisionShapes = [new CollisionCircle({ parent: this, radius: this.radius })];
-    this.color = color;
 
     this.setClickHandler(this.onClick);
   }
@@ -39,6 +33,4 @@ class Ball extends PhysicsBody {
   }
 }
 
-// setInterval(() => {
-_canvas.addEntity(new Ball({ position: Vector2.random([0, 0], [_canvas.screenWidth, _canvas.screenHeight]), color: "white" }));
-// }, 1000);
+_canvas.addEntity(new Ball());

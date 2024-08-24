@@ -1,9 +1,13 @@
 {
   "name": "@naszos/game-utils",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": false,
   "module": "./dist/game-utils.js",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Tismas/game-utils.git"
+  },
   "exports": {
     ".": {
       "import": {
@@ -19,7 +23,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "vite --host",
-    "build": "rm -rf ./build && tsc && vite build && dts-bundle-generator --config ./dts-bundle-generator.config.ts && copyfiles ./package.json build",
+    "build": "rm -rf ./build && tsc && vite build && dts-bundle-generator --config ./dts-bundle-generator.config.ts && copyfiles ./package.json build && copyfiles ./README.md build",
     "test": "vitest",
     "test:watch": "vitest --watch",
     "test:coverage": "vitest --coverage",
