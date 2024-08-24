@@ -135,6 +135,7 @@ export class PhysicsBody implements Entity {
     }
 
     this._onCollision?.(other);
+    other._onCollision?.(this);
   }
 
   /** Update position based on velocity. Used automatically if animate on canvas is set to true */
