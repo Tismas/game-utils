@@ -17,3 +17,11 @@ export const clamp = (value: number, min: number, max: number, onOutOfBounds?: V
   }
   return value;
 };
+
+export const clampLeft = (value: number, min: number, onOutOfBounds?: VoidFunction): number => {
+  return clamp(value, min, Infinity, onOutOfBounds);
+};
+
+export const clampRight = (value: number, max: number, onOutOfBounds?: VoidFunction): number => {
+  return clamp(value, -Infinity, max, onOutOfBounds);
+};

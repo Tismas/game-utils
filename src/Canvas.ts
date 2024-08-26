@@ -1,7 +1,8 @@
+import { Entity } from "./entity/Entity";
+import { CollisionModule } from "./entity/modules/CollisionModule";
 import { addKeyPressListener, keyboard, removeKeyPressListener } from "./input/keyboard";
 import { Vector2 } from "./math/Vector2";
 import { clamp } from "./math/bounds";
-import { isPhysicsBody } from "./physics/PhysicsBody";
 
 type FullScreenOption = boolean | { padding: Vector2 };
 
@@ -18,13 +19,6 @@ interface CanvasOptions {
   fastFriction?: boolean;
 }
 
-export interface Entity {
-  position: Vector2;
-  draw(canvas: Canvas): void;
-  update?(deltaTime: number, canvas: Canvas): void;
-  onRemove?(): void;
-}
-
 export type UpdateListener = (deltaTime: number) => void;
 
 export class Canvas {
@@ -39,7 +33,6 @@ export class Canvas {
   private fullScreen: FullScreenOption;
   private beforeUpdateListeners: UpdateListener[] = [];
   private afterUpdateListeners: UpdateListener[] = [];
-  private fastFriction: boolean;
   private screen: HTMLCanvasElement;
   private canvasContext: CanvasRenderingContext2D;
   private debugCollision = false;
@@ -58,11 +51,10 @@ export class Canvas {
    * @param canvasOptions - options for the canvas
    */
   constructor(canvasElementId: string, canvasOptions: CanvasOptions = {}) {
-    const { fullScreen, size, background, animate, fastFriction } = canvasOptions;
+    const { fullScreen, size, background, animate } = canvasOptions;
     this.background = background || "transparent";
     this.animate = animate ?? true;
     this.fullScreen = fullScreen ?? false;
-    this.fastFriction = fastFriction ?? false;
     this.entities = [];
     this.size = size;
 
@@ -298,46 +290,18 @@ export class Canvas {
     const deltaTime = clamp((now - this.lastUpdate) / 1000, 0, 1 / 30);
 
     this.beforeUpdateListeners.forEach((listener) => listener(deltaTime));
-
     this.entities.forEach((entity) => {
-      entity.update?.(deltaTime, this);
+      entity.update(deltaTime, this);
     });
-    this.entities.filter(isPhysicsBody).forEach((entity) => {
-      if (this.fastFriction) {
-        entity.applyPercentageFriction(deltaTime);
-      } else {
-        entity.applyFriction(deltaTime);
-      }
-      entity.applyGravity(deltaTime);
-    });
-    this.calculateCollisions();
-
     this.afterUpdateListeners.forEach((listener) => listener(deltaTime));
 
     this.lastUpdate = now;
   };
 
-  private calculateCollisions = () => {
-    const entitiesWithCollisionShapes = this.entities.filter(isPhysicsBody).filter((entity) => entity.collisionShapes);
-
-    for (let i = 0; i < entitiesWithCollisionShapes.length; i++) {
-      const entity = entitiesWithCollisionShapes[i];
-      for (let j = i + 1; j < entitiesWithCollisionShapes.length; j++) {
-        const other = entitiesWithCollisionShapes[j];
-        entity.collisionShapes?.forEach((shape) => {
-          other.collisionShapes?.forEach((otherShape) => {
-            if (shape.isColliding(otherShape)) {
-              entity.collideWith(other);
-            }
-          });
-        });
-      }
-    }
-  };
-
   private drawDebugCollision = () => {
-    this.entities.filter(isPhysicsBody).forEach((entity) => {
-      entity.collisionShapes?.forEach((shape) => {
+    this.entities.forEach((entity) => {
+      const collisionModule = entity.findModule(CollisionModule);
+      collisionModule?.collisionShapes?.forEach((shape) => {
         shape.draw(this);
       });
     });

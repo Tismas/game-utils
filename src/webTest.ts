@@ -1,36 +1,44 @@
 import { Canvas } from "./Canvas";
+import { Entity } from "./entity/Entity";
+import { CollisionModule } from "./entity/modules/CollisionModule";
+import { FrictionModule } from "./entity/modules/FrictionModule";
+import { GravityModule } from "./entity/modules/GravityModule";
+import { MovementModule } from "./entity/modules/MovementModule";
 import { Vector2 } from "./math/Vector2";
-import { clamp } from "./math/bounds";
 import { CollisionCircle } from "./math/collision";
-import { PhysicsBody } from "./physics/PhysicsBody";
 
-const _canvas = new Canvas("game-canvas", { fullScreen: true, background: "#111" });
+const canvas = new Canvas("game-canvas", { fullScreen: true, background: "#111" });
 
-class Ball extends PhysicsBody {
-  radius: number;
-  color: string;
+class Ball extends Entity {
+  radius: number = 5;
+  color: string = "#fff";
 
   constructor() {
-    super({ position: Vector2.random([0, 0], [_canvas.screenWidth, _canvas.screenHeight]), gravity: 100, friction: 10 });
-    this.color = "#fff";
-    this.radius = 10;
-    this.collisionShapes = [new CollisionCircle({ parent: this, radius: this.radius })];
+    super();
 
-    this.setClickHandler(this.onClick);
+    this.position = Vector2.random([0, 0], [canvas.screenWidth, canvas.screenHeight]);
+    this.addModule(
+      new MovementModule(this, { clampToScreen: { type: "paddingAllSides", padding: this.radius } }),
+      new CollisionModule(this, { collisionShapes: [new CollisionCircle({ parent: this, radius: this.radius })] }),
+      new GravityModule(this, { gravity: 100 }),
+      new FrictionModule(this, { friction: 0.01 }),
+    );
   }
 
-  onClick = () => console.log("clicked");
-
   draw(canvas: Canvas) {
+    super.draw(canvas);
     canvas.drawCircle(this.position, this.radius, { fill: this.color });
   }
 
   update(deltaTime: number, canvas: Canvas) {
     super.update(deltaTime, canvas);
-
-    this.position.x = clamp(this.position.x, this.radius, canvas.screenWidth - this.radius - 1, () => (this.velocity.x *= -1));
-    this.position.y = clamp(this.position.y, this.radius, canvas.screenHeight - this.radius - 1, () => (this.velocity.y *= -1));
   }
 }
 
-_canvas.addEntity(new Ball());
+const intervalId = setInterval(() => {
+  canvas.addEntity(new Ball());
+}, 100);
+
+setTimeout(() => {
+  clearInterval(intervalId);
+}, 1000 * 30);
