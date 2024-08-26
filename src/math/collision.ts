@@ -67,7 +67,7 @@ export class CollisionCircle extends CollisionShapeBase {
       const distance = this.position.distanceTo(other.position);
       colliding = distance < this.radius + other.radius;
     } else if (other instanceof CollisionRectangle) {
-      const closestPoint = this.getClosesPointToRectangle(other);
+      const closestPoint = this.getClosestPointToRectangle(other);
       const distance = this.position.distanceTo(closestPoint);
       colliding = distance < this.radius;
     } else {
@@ -89,20 +89,18 @@ export class CollisionCircle extends CollisionShapeBase {
     }
 
     if (other instanceof CollisionRectangle) {
-      const closestPoint = this.getClosesPointToRectangle(other);
-      const shiftVector = closestPoint.withAngle(closestPoint.angleTo(this.position)).withLength(this.radius + 1);
+      const closestPoint = this.getClosestPointToRectangle(other);
+      const shiftVector = this.position.withAngle(this.position.angleTo(closestPoint)).withLength(this.radius + 1);
       return this.position.add(shiftVector);
     }
 
     throw new Error("Unknown CollisionShape type");
   }
 
-  getClosesPointToRectangle(other: CollisionRectangle): Vector2 {
-    const closestPoint = new Vector2(
-      Math.max(other.position.x, Math.min(this.position.x, other.position.x + other.width)),
-      Math.max(other.position.y, Math.min(this.position.y, other.position.y + other.height)),
-    );
-    return closestPoint;
+  getClosestPointToRectangle(other: CollisionRectangle): Vector2 {
+    const closestX = Math.max(other.position.x, Math.min(this.position.x, other.position.x + other.width));
+    const closestY = Math.max(other.position.y, Math.min(this.position.y, other.position.y + other.height));
+    return new Vector2(closestX, closestY);
   }
 }
 
@@ -153,7 +151,7 @@ export class CollisionRectangle extends CollisionShapeBase {
 
   getPositionAfterCollision(other: CollisionShape): Vector2 {
     if (other instanceof CollisionCircle) {
-      return this.getPositionAfterCollision(other);
+      return other.getPositionAfterCollision(other);
     }
 
     if (other instanceof CollisionRectangle) {

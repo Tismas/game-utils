@@ -8,7 +8,13 @@ import { Module } from "../Module";
 type ClampOption = boolean | { readonly type: "paddingAllSides"; padding: number };
 type ClampOptions =
   | ClampOption
-  | { readonly type: "paddingSelective"; left?: ClampOption; right?: ClampOption; top?: ClampOption; bottom?: ClampOption };
+  | {
+      readonly type: "paddingSelective";
+      left?: number | boolean;
+      right?: number | boolean;
+      top?: number | boolean;
+      bottom?: number | boolean;
+    };
 
 class ClampConfig {
   left: number | false;
@@ -16,9 +22,11 @@ class ClampConfig {
   top: number | false;
   bottom: number | false;
 
-  getValueFromOption(value: ClampOption): number | false {
+  getValueFromOption(value: ClampOption | number): number | false {
     if (typeof value === "boolean") {
       return value ? 0 : false;
+    } else if (typeof value === "number") {
+      return value;
     } else {
       return value.padding;
     }
@@ -50,7 +58,6 @@ export class MovementModule extends Module {
   acceleration: Vector2;
   keepMomentumOnCollision: boolean;
   clampConfig: ClampConfig;
-  framesSinceLastCollision: number = 0;
 
   constructor(parent: Entity, options: MovementModuleOptions = {}) {
     super(parent);
@@ -71,7 +78,6 @@ export class MovementModule extends Module {
   };
 
   update(deltaTime: number, canvas: Canvas) {
-    this.framesSinceLastCollision++;
     this.velocity = this.velocity.add(this.acceleration.multiply(deltaTime));
     this.parent.position = this.parent.position.add(this.velocity.multiply(deltaTime));
 
@@ -98,8 +104,8 @@ export class MovementModule extends Module {
     this.velocity = this.parent.position
       .withAngle(other.position.angleTo(this.parent.position))
       .add(otherVelocity)
+      .add(this.velocity)
       .withLength(this.keepMomentumOnCollision ? this.velocity.length : avgSpeed);
-    this.framesSinceLastCollision = 0;
   }
 
   onCollision() {

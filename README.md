@@ -6,7 +6,9 @@ Random utilities to make creating html canvas games easier
 
 - fix collision & gravity when more entities gather on the floor
 - move layers to CollisionShape instead of CollisionModule
-- test rectangle-rectangle and rectangle-circle collisions
+- test & fix rectangle-rectangle and rectangle-circle collisions
+- better listener removal in Canvas
+- add rotation after collision
 
 ## How to get started
 

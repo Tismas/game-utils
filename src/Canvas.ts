@@ -35,18 +35,21 @@ export class Canvas {
   private afterUpdateListeners: UpdateListener[] = [];
   private screen: HTMLCanvasElement;
   private canvasContext: CanvasRenderingContext2D;
-  private debugCollision = false;
-  private debugKeyPresses = false;
   private size?: Vector2;
   private scaledScreenSize: Vector2;
   private updateIntervalId: number | null = null;
   private requestAnimationFrameId: number | null = null;
+
+  private debugCollision = Boolean(localStorage.getItem("debugCollision"));
+  private debugKeyPresses = Boolean(localStorage.getItem("debugKeyPresses"));
+  private slowMode = Boolean(localStorage.getItem("slowMode"));
 
   /**
    * Wraps around an HTML canvas element and provides drawing and updating functionality
    * You can also trigger debugging with:
    * - F4 + b: Toggle collision shape drawing
    * - F4 + k: Toggle pressed keys display
+   * - F4 + s: Toggle frame by frame mode. Pressing F4+n will advance n frames
    * @param canvasElementId - html canvas element id to use (eg. if you have `<canvas id="game-canvas"></canvas>` provide `"game-canvas"`)
    * @param canvasOptions - options for the canvas
    */
@@ -75,7 +78,7 @@ export class Canvas {
     this.resize();
     this.clear();
 
-    if (this.animate) {
+    if (this.animate && !this.slowMode) {
       this.updateIntervalId = setInterval(this.update, 1000 / 60) as unknown as number;
     }
     this.update();
@@ -87,13 +90,47 @@ export class Canvas {
 
     addKeyPressListener(["F4", "b"], this.onDebugCollision);
     addKeyPressListener(["F4", "k"], this.onDebugKeyPresses);
+    addKeyPressListener(["F4", "s"], this.onDebugSlowMode);
+    addKeyPressListener(["F4", "n"], this.onDebugNextFrame);
   }
 
   private onDebugCollision = () => {
     this.debugCollision = !this.debugCollision;
+
+    if (this.debugCollision) {
+      localStorage.setItem("debugCollision", "1");
+    } else {
+      localStorage.removeItem("debugCollision");
+    }
   };
   private onDebugKeyPresses = () => {
     this.debugKeyPresses = !this.debugKeyPresses;
+
+    if (this.debugKeyPresses) {
+      localStorage.setItem("debugKeyPresses", "1");
+    } else {
+      localStorage.removeItem("debugKeyPresses");
+    }
+  };
+  private onDebugSlowMode = () => {
+    this.slowMode = !this.slowMode;
+
+    if (this.slowMode) {
+      localStorage.setItem("slowMode", "1");
+    } else {
+      localStorage.removeItem("slowMode");
+    }
+
+    if (this.slowMode && this.updateIntervalId) {
+      clearInterval(this.updateIntervalId);
+    } else {
+      this.updateIntervalId = setInterval(this.update, 1000 / 60) as unknown as number;
+    }
+  };
+  private onDebugNextFrame = () => {
+    if (this.slowMode) {
+      this.update();
+    }
   };
 
   /** Removes event listeners, intervals, entities etc.  */
@@ -106,6 +143,8 @@ export class Canvas {
     }
     removeKeyPressListener(["F4", "b"], this.onDebugCollision);
     removeKeyPressListener(["F4", "k"], this.onDebugKeyPresses);
+    removeKeyPressListener(["F4", "s"], this.onDebugSlowMode);
+    removeKeyPressListener(["F4", "n"], this.onDebugNextFrame);
     window.removeEventListener("resize", this.resize);
     this.entities.forEach((entity) => this.removeEntity(entity));
   };
