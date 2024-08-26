@@ -2,6 +2,12 @@
 
 Random utilities to make creating html canvas games easier
 
+## Todo
+
+- fix collision & gravity when more entities gather on the floor
+- move layers to CollisionShape instead of CollisionModule
+- test rectangle-rectangle and rectangle-circle collisions
+
 ## How to get started
 
 Create a html document with `<canvas>` element and give it an id eg. `<canvas id="game-canvas"></canvas>`. Then you add js/ts.

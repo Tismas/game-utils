@@ -5,22 +5,22 @@ import { Module } from "../Module";
 import { MovementModule } from "./MovementModule";
 
 interface GravityModuleOptions {
-  gravity: number;
+  gravity: number | Vector2;
 }
 
 export class GravityModule extends Module {
-  gravity: number;
+  gravity: Vector2;
 
   constructor(parent: Entity, options: GravityModuleOptions) {
     super(parent);
 
-    this.gravity = options.gravity;
+    this.gravity = typeof options.gravity === "number" ? new Vector2(0, options.gravity) : options.gravity;
   }
 
   update(deltaTime: number) {
     const movementModule = this.parent.findModule(MovementModule);
     if (!movementModule) throw new Error("Gravity modules requires MovementModule to function");
 
-    movementModule.acceleration = movementModule.acceleration.add(new Vector2(0, this.gravity * deltaTime));
+    movementModule.acceleration = movementModule.acceleration.add(this.gravity.multiply(deltaTime));
   }
 }
