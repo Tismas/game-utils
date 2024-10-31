@@ -19,6 +19,6 @@ export class FrictionModule extends Module {
     const movementModule = this.parent.findModule(MovementModule);
     if (!movementModule) throw new Error("Friction modules requires MovementModule to function");
 
-    movementModule.velocity = movementModule.velocity.multiply(1 - this.friction);
+    // TODO
   }
 }

@@ -1,4 +1,4 @@
-import { Vector2 } from "~/math/Vector2";
+import { Vector2 } from "~/math/vector/Vector2";
 
 import { Entity } from "../Entity";
 import { Module } from "../Module";
@@ -17,10 +17,10 @@ export class GravityModule extends Module {
     this.gravity = typeof options.gravity === "number" ? new Vector2(0, options.gravity) : options.gravity;
   }
 
-  update(deltaTime: number) {
+  update() {
     const movementModule = this.parent.findModule(MovementModule);
     if (!movementModule) throw new Error("Gravity modules requires MovementModule to function");
 
-    movementModule.acceleration = movementModule.acceleration.add(this.gravity.multiply(deltaTime));
+    movementModule.accelerate(this.gravity);
   }
 }

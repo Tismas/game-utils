@@ -1,4 +1,4 @@
-import { randomInRange } from "./random";
+import { randomInRange } from "../util/random";
 
 export class Vector2 {
   public x: number;
@@ -78,6 +78,10 @@ export class Vector2 {
 
   angleTo(v: Vector2): number {
     return Math.atan2(v.y - this.y, v.x - this.x);
+  }
+
+  abs() {
+    return new Vector2(Math.abs(this.x), Math.abs(this.y));
   }
 
   static random([minX, minY]: [number, number] = [-1, -1], [maxX, maxY]: [number, number] = [1, 1]) {

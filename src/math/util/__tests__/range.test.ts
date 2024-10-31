@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { range } from "./range";
+import { range } from "../range";
 
 describe("range", () => {
   it("should create range from 0 to n", () => {

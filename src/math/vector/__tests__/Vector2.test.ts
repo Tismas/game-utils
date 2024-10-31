@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { Vector2 } from "./Vector2";
+import { Vector2 } from "../Vector2";
 
 describe("Vector2", () => {
   it("should calculate and change length correctly", () => {

@@ -1,8 +1,8 @@
 import { Entity } from "./entity/Entity";
 import { CollisionModule } from "./entity/modules/CollisionModule";
 import { addKeyPressListener, keyboard, removeKeyPressListener } from "./input/keyboard";
-import { Vector2 } from "./math/Vector2";
-import { clamp } from "./math/bounds";
+import { clamp } from "./math/util/clamp";
+import { Vector2 } from "./math/vector/Vector2";
 
 type FullScreenOption = boolean | { padding: Vector2 };
 
@@ -112,7 +112,7 @@ export class Canvas {
       localStorage.removeItem("debugKeyPresses");
     }
   };
-  private onDebugSlowMode = () => {
+  onDebugSlowMode = () => {
     this.slowMode = !this.slowMode;
 
     if (this.slowMode) {

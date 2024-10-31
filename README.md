@@ -9,6 +9,8 @@ Random utilities to make creating html canvas games easier
 - test & fix rectangle-rectangle and rectangle-circle collisions
 - better listener removal in Canvas
 - add rotation after collision
+- add perlin noise
+- add springs
 
 ## How to get started
 

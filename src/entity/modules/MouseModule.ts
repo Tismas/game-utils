@@ -1,5 +1,6 @@
 import { getMousePosition } from "~/input/mouse";
-import { CollisionCircle, CollisionShape } from "~/math/collision";
+import { CollisionShape } from "~/math/collision";
+import { CollisionCircle } from "~/math/collision/circle";
 
 import { Entity } from "../Entity";
 import { Module } from "../Module";
