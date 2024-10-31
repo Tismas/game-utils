@@ -34,5 +34,5 @@ export abstract class CollisionShapeBase {
   }
 
   abstract draw(canvas: Canvas): void;
-  abstract isColliding(other: CollisionShape): boolean;
+  abstract getCollision(other: CollisionShape): Vector2 | false;
 }

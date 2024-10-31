@@ -1,6 +1,7 @@
 import { Canvas } from "~/Canvas";
 
 import type { CollisionShape } from ".";
+import { Vector2 } from "../vector/Vector2";
 import { CollisionShapeBase, CollisionShapeOptions } from "./collisionBase";
 
 interface CollisionShapeCircleOptions extends CollisionShapeOptions {
@@ -22,9 +23,16 @@ export class CollisionCircle extends CollisionShapeBase {
     canvas.drawCircle(this.position, this.radius, { stroke: "red" });
   }
 
-  isColliding(other: CollisionShape): boolean {
+  getCollision(other: CollisionShape): Vector2 | false {
     if (other instanceof CollisionCircle) {
-      return other.position.distanceTo(this.position) < this.radius + other.radius;
+      const collisionAxis = this.position.subtract(other.position);
+      const dist = collisionAxis.length;
+      const radiusSum = this.radius + other.radius;
+      if (dist > radiusSum) return false;
+
+      const dir = collisionAxis.divide(dist);
+      const delta = radiusSum - dist;
+      return dir.multiply(delta);
     }
 
     throw new Error("Unsupported collision shape", other);

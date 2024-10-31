@@ -42,7 +42,7 @@ export class MouseModule extends Module {
 
     return Boolean(
       this.collisionShapes?.find((shape) => {
-        return shape.isColliding(
+        return shape.getCollision(
           new CollisionCircle({
             parent: this.parent,
             offset: this.parent.position.subtract(mousePos),

@@ -327,22 +327,25 @@ export class Canvas {
   private update = () => {
     const now = Date.now();
     const deltaTime = clamp((now - this.lastUpdate) / 1000, 0, 1 / 30);
+    const subSteps = 8;
+    const subDeltaTime = deltaTime / subSteps;
 
     this.beforeUpdateListeners.forEach((listener) => listener(deltaTime));
-    this.entities.forEach((entity) => {
-      entity.update(deltaTime, this);
-    });
-    this.afterUpdateListeners.forEach((listener) => listener(deltaTime));
 
+    for (let step = 0; step < subSteps; step++) {
+      this.entities.forEach((entity) => {
+        entity.update(subDeltaTime, this);
+      });
+    }
+
+    this.afterUpdateListeners.forEach((listener) => listener(deltaTime));
     this.lastUpdate = now;
   };
 
   private drawDebugCollision = () => {
     this.entities.forEach((entity) => {
       const collisionModule = entity.findModule(CollisionModule);
-      collisionModule?.collisionShapes?.forEach((shape) => {
-        shape.draw(this);
-      });
+      collisionModule?.collisionShape?.draw(this);
     });
   };
 

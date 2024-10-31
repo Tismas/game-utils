@@ -49,8 +49,6 @@ export class MovementModule extends Module {
   applyConstraint() {
     const collisionModule = this.parent.findModule(CollisionModule);
     if (!this.constraint || !collisionModule) return;
-    for (const collisionShape of collisionModule.collisionShapes) {
-      this.parent.position = this.constraint.constrainPosition(collisionShape);
-    }
+    this.parent.position = this.constraint.constrainPosition(collisionModule.collisionShape);
   }
 }

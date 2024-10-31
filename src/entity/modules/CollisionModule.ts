@@ -13,7 +13,7 @@ export interface CollisionModuleOptions {
   layers?: Array<number>;
 
   /** Shapes that determine object hit box */
-  collisionShapes: Array<CollisionShape>;
+  collisionShape: CollisionShape;
 
   /** This function will be called on every collision */
   onCollision?: (other: Entity) => void;
@@ -22,22 +22,36 @@ export interface CollisionModuleOptions {
 export class CollisionModule extends Module {
   private static layers: Array<Array<LayerEntry>> = [];
 
-  entityLayers: Array<number> = [];
-  collisionShapes: Array<CollisionShape>;
+  collisionLayers: Array<number> = [];
+  collisionShape: CollisionShape;
 
   onCollision?: (other: Entity) => void;
 
   constructor(parent: Entity, options: CollisionModuleOptions) {
     super(parent);
 
-    this.entityLayers = options.layers || [0];
-    this.collisionShapes = options.collisionShapes;
+    this.collisionLayers = options.layers || [0];
+    this.collisionShape = options.collisionShape;
     this.onCollision = options.onCollision;
 
-    for (const layer of this.entityLayers) {
+    for (const layer of this.collisionLayers) {
       if (!CollisionModule.layers[layer]) CollisionModule.layers[layer] = [];
 
       CollisionModule.layers[layer].push({ entity: this.parent, collisionModule: this });
+    }
+  }
+
+  update(): void {
+    for (const layer of this.collisionLayers) {
+      const entities = CollisionModule.layers[layer];
+      for (const { entity, collisionModule } of entities) {
+        if (entity === this.parent) continue;
+        const moveVector = this.collisionShape.getCollision(collisionModule.collisionShape);
+        if (moveVector) {
+          this.parent.position = this.parent.position.add(moveVector.multiply(0.5));
+          entity.position = entity.position.add(moveVector.multiply(-0.5));
+        }
+      }
     }
   }
 }
