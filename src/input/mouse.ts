@@ -1,4 +1,4 @@
-import { Vector2 } from "~/math/vector/Vector2";
+import { Vector2 } from "@naszos/utils";
 
 export enum MouseButton {
   Left = 0,

@@ -1,4 +1,4 @@
-import { Vector2 } from "~/math/vector/Vector2";
+import { Vector2 } from "@naszos/utils";
 
 import { Entity } from "../Entity";
 import { Module } from "../Module";

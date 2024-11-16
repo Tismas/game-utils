@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@naszos/utils':
+        specifier: ^0.0.2
+        version: 0.0.2
     devDependencies:
       '@trivago/prettier-plugin-sort-imports':
         specifier: 4.3.0
@@ -331,6 +335,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.9':
     resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
+
+  '@naszos/utils@0.0.2':
+    resolution: {integrity: sha512-0CatCrPsqMbf63NMluVklk4PTGrCItPaS8dPLgbD+oy7fN6d0GPJIMX4D2yHna3lKmUMPlYXifaTnFrckYwhCA==}
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -1751,6 +1758,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@naszos/utils@0.0.2': {}
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:

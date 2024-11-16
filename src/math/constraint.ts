@@ -1,7 +1,7 @@
+import { Vector2 } from "@naszos/utils";
 import { Canvas } from "~/Canvas";
 
 import { CollisionShape } from "./collision";
-import { Vector2 } from "./vector/Vector2";
 
 abstract class ConstraintBase {
   position: Vector2;

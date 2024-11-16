@@ -1,3 +1,5 @@
+import { Vector2, randomFloat } from "@naszos/utils";
+
 import { Canvas } from "./Canvas";
 import { Entity } from "./entity/Entity";
 import { CollisionModule } from "./entity/modules/CollisionModule";
@@ -6,8 +8,6 @@ import { GravityModule } from "./entity/modules/GravityModule";
 import { MovementModule } from "./entity/modules/MovementModule";
 import { CollisionCircle } from "./math/collision/circle";
 import { CircleConstraint } from "./math/constraint";
-import { randomInRange } from "./math/util/random";
-import { Vector2 } from "./math/vector/Vector2";
 
 const canvas = new Canvas("game-canvas", { fullScreen: true, background: "#111" });
 const constraintRadius = 400;
@@ -20,7 +20,7 @@ class Ball extends Entity {
     super();
 
     this.position = position;
-    this.radius = randomInRange(5, 20);
+    this.radius = randomFloat(5, 20);
     this.color = "#fff";
     const constraint = new CircleConstraint(new Vector2(canvas.screenWidth / 2, canvas.screenHeight / 2), constraintRadius);
     // const constraint = new RectConstraint(Vector2.zero(), canvas.screenWidth, canvas.screenHeight);

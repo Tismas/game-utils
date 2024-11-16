@@ -10,25 +10,25 @@ type OnClick = (entity: Entity) => void;
 
 interface MouseModuleOptions {
   /** Defaults to CollisionModule collision shapes if they exist */
-  collisionShapes?: CollisionShape[];
+  collisionShape?: CollisionShape;
   onClick?: OnClick;
 }
 
 export class MouseModule extends Module {
   onClick?: OnClick;
-  collisionShapes?: CollisionShape[];
+  collisionShape?: CollisionShape;
 
   constructor(parent: Entity, options: MouseModuleOptions) {
     super(parent);
 
-    this.collisionShapes = options.collisionShapes;
+    this.collisionShape = options.collisionShape;
     this.onClick = options.onClick;
     window.addEventListener("click", this.handleClick);
   }
 
   init() {
     const collisionModule = this.parent.findModule(CollisionModule);
-    this.collisionShapes ||= [...(collisionModule?.collisionShapes || [])];
+    this.collisionShape ||= collisionModule?.collisionShape;
   }
 
   private handleClick = () => {
@@ -41,16 +41,14 @@ export class MouseModule extends Module {
     const mousePos = getMousePosition();
 
     return Boolean(
-      this.collisionShapes?.find((shape) => {
-        return shape.getCollision(
-          new CollisionCircle({
-            parent: this.parent,
-            offset: this.parent.position.subtract(mousePos),
-            radius: 1,
-            triggerCollisionCallback: false,
-          }),
-        );
-      }),
+      this.collisionShape?.getCollision(
+        new CollisionCircle({
+          parent: this.parent,
+          offset: this.parent.position.subtract(mousePos),
+          radius: 1,
+          triggerCollisionCallback: false,
+        }),
+      ),
     );
   }
 

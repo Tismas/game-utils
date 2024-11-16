@@ -1,6 +1,6 @@
+import { Vector2 } from "@naszos/utils";
 import { Canvas } from "~/Canvas";
 import { Constraint } from "~/math/constraint";
-import { Vector2 } from "~/math/vector/Vector2";
 
 import { Entity } from "../Entity";
 import { Module } from "../Module";

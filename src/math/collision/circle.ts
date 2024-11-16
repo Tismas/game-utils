@@ -1,7 +1,7 @@
+import { Vector2 } from "@naszos/utils";
 import { Canvas } from "~/Canvas";
 
 import type { CollisionShape } from ".";
-import { Vector2 } from "../vector/Vector2";
 import { CollisionShapeBase, CollisionShapeOptions } from "./collisionBase";
 
 interface CollisionShapeCircleOptions extends CollisionShapeOptions {

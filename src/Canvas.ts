@@ -1,8 +1,8 @@
+import { Vector2, clamp } from "@naszos/utils";
+
 import { Entity } from "./entity/Entity";
 import { CollisionModule } from "./entity/modules/CollisionModule";
 import { addKeyPressListener, keyboard, removeKeyPressListener } from "./input/keyboard";
-import { clamp } from "./math/util/clamp";
-import { Vector2 } from "./math/vector/Vector2";
 
 type FullScreenOption = boolean | { padding: Vector2 };
 

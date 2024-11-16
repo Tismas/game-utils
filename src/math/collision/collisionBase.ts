@@ -1,8 +1,8 @@
+import { Vector2 } from "@naszos/utils";
 import { Canvas } from "~/Canvas";
 import { Entity } from "~/entity/Entity";
 
 import { CollisionShape } from ".";
-import { Vector2 } from "../vector/Vector2";
 
 export interface CollisionShapeOptions {
   parent: Entity;

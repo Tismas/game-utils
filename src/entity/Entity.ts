@@ -1,5 +1,5 @@
+import { Vector2 } from "@naszos/utils";
 import { Canvas } from "~/Canvas";
-import { Vector2 } from "~/math/vector/Vector2";
 
 import { EntityModule } from "./Module";
 
